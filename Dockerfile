@@ -1,11 +1,13 @@
-###
-#
-# A rock mongo container to allow
-#
-###
-
 FROM ubuntu:14.04
-MAINTAINER Kingsquare <docker@kingsquare.nl>
+MAINTAINER Javier Jerónimo <javier@jeronimosuarez.es>
+
+# Hostname in nginx-site (useful in panamax ==> non "localhost")
+ENV NGINX_HOSTNAME rockmongo.docker.local
+
+# rockmongo config.php
+ENV	MONGO_NAME mongo
+ENV MONGO_HOSTNAME mongo
+ENV MONGO_PORT 27017
 
 RUN apt-get update && \
 	apt-get install -y --no-install-recommends build-essential wget nginx php5-fpm php-pear php5-dev && \
@@ -34,5 +36,17 @@ RUN mkdir -p /var/lib/php5/sessions && \
 	echo "<?php phpinfo(); " > /app/info.php
 
 EXPOSE 80
-ADD ./rockmongo /etc/nginx/sites-available/default
+
+ADD ./rockmongo.conf /etc/nginx/sites-available/default
+RUN sed -i -e "s/%%%NGINX_HOSTNAME%%%/${NGINX_HOSTNAME}/g" /etc/nginx/sites-available/default
+
+RUN cat /etc/nginx/sites-available/default
+
+ADD ./config.php /app/config.php
+RUN sed -i -e "s/%%%MONGO_NAME%%%/${MONGO_NAME}/g" /app/config.php
+RUN sed -i -e "s/%%%MONGO_HOSTNAME%%%/${MONGO_HOSTNAME}/g" /app/config.php
+RUN sed -i -e "s/%%%MONGO_PORT%%%/${MONGO_PORT}/g" /app/config.php
+
+RUN cat /app/config.php
+
 CMD service php5-fpm start && nginx
