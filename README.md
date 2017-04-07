@@ -3,23 +3,12 @@ docker-mongorocker fork
 
 Just the original docker with some features for customization.
 
-Instructions:
- - Link to a MongoDB container and name the link "mongo" in this side.
- - Expose mongorock port 80 (ie, in port 8080)
+set `$MONGO["servers"][$i]["mongo_auth"] = true;` in `config.php`. So login with user your admin user/pass. 
 
-```bash
-    docker run ... -l mymongocontainername:mongo -p 8080:80
-```
+Usually mongoDB is installed without admin as default. You should add admin user/pass first. You can try mongo command as follows:
 
-Notes:
- - rockmongo user/pass: admin (no password) !!!!!!!!!!!!! BE CAREFUL !!!!!!!!!!!!!!
- - MongoDB user/pass: no pass (so nothing configured in config.php)
+	use admin
+	db.createUser({user:"root",pwd:"root123",roles:["userAdminAnyDatabase"]}) 
 
+Then you can use root/root123 to login.
 
-
-You can also define a hostname "rockmongo.docker.local" to your docker IP (localhost, boot2docker IP, panamax IP...) to access rockmongo's nginx.
-
- - You can also use "docker run" env params to change:
-  - Name of linked MongoDB
-  - MongoDB hostname, MongoDB port (by default: linked MongoDB hostname autoset by docker & 27017)
-  - Different hostname for nginx site

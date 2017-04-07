@@ -1,12 +1,12 @@
 FROM ubuntu:14.04
-MAINTAINER Javier Jerónimo <javier@jeronimosuarez.es>
+MAINTAINER  yc7en <songliheng@gmail.com>
 
 # Hostname in nginx-site (useful in panamax ==> non "localhost")
 ENV NGINX_HOSTNAME rockmongo.docker.local
 
 # rockmongo config.php
-ENV	MONGO_NAME mongo
-ENV MONGO_HOSTNAME mongo
+ENV	MONGO_NAME mongoDB
+ENV MONGO_HOSTNAME 192.168.99.100
 ENV MONGO_PORT 27017
 
 RUN apt-get update && \
